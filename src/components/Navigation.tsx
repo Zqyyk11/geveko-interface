@@ -16,25 +16,25 @@ const Navigation = () => {
             transition={{ duration: 0.5 }}
             className="flex items-center space-x-8"
           >
-            <Link to="/" className="text-lg font-medium">
-              Calculator & Storage
+            <Link to="/" className="text-lg font-medium text-gray-900">
+              Geveko Markings
             </Link>
             <div className="hidden md:flex space-x-4">
               <Link
                 to="/"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/') 
-                    ? 'bg-soft-purple text-gray-900' 
+                    ? 'bg-[#9b87f5] text-white' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                Calculator
+                Product Calculator
               </Link>
               <Link
                 to="/storage"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/storage') 
-                    ? 'bg-soft-purple text-gray-900' 
+                    ? 'bg-[#9b87f5] text-white' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >

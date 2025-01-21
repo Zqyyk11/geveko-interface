@@ -1,48 +1,43 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Minus, X, Divide, Equal } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+type Product = {
+  id: string;
+  name: string;
+  coverage: number; // Coverage in meters per kg
+};
+
+const products: Product[] = [
+  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3 }, // 3kg per 100m
+  { id: 'vialux', name: 'ViaLux®', coverage: 50 }, // 2kg per 100m
+  { id: 'viapaint', name: 'ViaPaint®', coverage: 25 }, // 4kg per 100m
+];
 
 const Calculator = () => {
-  const [display, setDisplay] = useState('0');
-  const [equation, setEquation] = useState('');
-  const [history, setHistory] = useState<string[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [kilometers, setKilometers] = useState<string>('');
+  const [history, setHistory] = useState<Array<{ product: string, km: number, amount: number }>>([]);
 
-  const handleNumber = (num: string) => {
-    setDisplay(prev => prev === '0' ? num : prev + num);
+  const calculateAmount = () => {
+    const product = products.find(p => p.id === selectedProduct);
+    if (!product || !kilometers) return;
+
+    const km = parseFloat(kilometers);
+    if (isNaN(km)) return;
+
+    // Convert km to meters and calculate required amount in kg
+    const meters = km * 1000;
+    const amountNeeded = meters / product.coverage;
+
+    setHistory(prev => [...prev, {
+      product: product.name,
+      km,
+      amount: Math.ceil(amountNeeded)
+    }]);
   };
-
-  const handleOperator = (op: string) => {
-    setEquation(display + ' ' + op + ' ');
-    setDisplay('0');
-  };
-
-  const calculate = () => {
-    const fullEquation = equation + display;
-    try {
-      const result = eval(fullEquation);
-      setHistory(prev => [...prev, `${fullEquation} = ${result}`]);
-      setDisplay(result.toString());
-      setEquation('');
-    } catch (error) {
-      setDisplay('Error');
-    }
-  };
-
-  const clear = () => {
-    setDisplay('0');
-    setEquation('');
-  };
-
-  const Button = ({ children, onClick, className = '' }: any) => (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-      className={`h-14 rounded-lg text-lg font-medium transition-colors ${className}`}
-    >
-      {children}
-    </motion.button>
-  );
 
   return (
     <motion.div
@@ -52,80 +47,52 @@ const Calculator = () => {
       className="min-h-screen pt-20 px-4"
     >
       <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4">
-          <div className="bg-gray-50 rounded-xl p-4 h-24 flex flex-col items-end justify-between">
-            <div className="text-gray-500 text-sm">{equation}</div>
-            <div className="text-3xl font-medium">{display}</div>
-          </div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-6">Product Calculator</h1>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="product">Select Product</Label>
+              <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {products.map((product) => (
+                    <SelectItem key={product.id} value={product.id}>
+                      {product.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="grid grid-cols-4 gap-2">
-            <Button onClick={clear} className="bg-soft-pink text-gray-700">
-              C
-            </Button>
-            <Button onClick={() => handleOperator('/')} className="bg-soft-purple">
-              <Divide size={20} />
-            </Button>
-            <Button onClick={() => handleOperator('*')} className="bg-soft-purple">
-              <X size={20} />
-            </Button>
-            <Button onClick={() => handleOperator('-')} className="bg-soft-purple">
-              <Minus size={20} />
-            </Button>
+            <div className="space-y-2">
+              <Label htmlFor="kilometers">Distance (km)</Label>
+              <Input
+                id="kilometers"
+                type="number"
+                min="0"
+                step="0.1"
+                value={kilometers}
+                onChange={(e) => setKilometers(e.target.value)}
+                placeholder="Enter distance in kilometers"
+              />
+            </div>
 
-            {[7, 8, 9].map(num => (
-              <Button
-                key={num}
-                onClick={() => handleNumber(num.toString())}
-                className="bg-gray-100 hover:bg-gray-200"
-              >
-                {num}
-              </Button>
-            ))}
-            <Button onClick={() => handleOperator('+')} className="bg-soft-purple">
-              <Plus size={20} />
-            </Button>
-
-            {[4, 5, 6].map(num => (
-              <Button
-                key={num}
-                onClick={() => handleNumber(num.toString())}
-                className="bg-gray-100 hover:bg-gray-200"
-              >
-                {num}
-              </Button>
-            ))}
-            <Button onClick={calculate} className="bg-soft-purple row-span-2">
-              <Equal size={20} />
-            </Button>
-
-            {[1, 2, 3].map(num => (
-              <Button
-                key={num}
-                onClick={() => handleNumber(num.toString())}
-                className="bg-gray-100 hover:bg-gray-200"
-              >
-                {num}
-              </Button>
-            ))}
-
-            <Button
-              onClick={() => handleNumber('0')}
-              className="bg-gray-100 hover:bg-gray-200 col-span-2"
+            <button
+              onClick={calculateAmount}
+              className="w-full bg-[#9b87f5] text-white py-2 rounded-lg hover:bg-[#8b77e5] transition-colors"
+              disabled={!selectedProduct || !kilometers}
             >
-              0
-            </Button>
-            <Button
-              onClick={() => handleNumber('.')}
-              className="bg-gray-100 hover:bg-gray-200"
-            >
-              .
-            </Button>
+              Calculate
+            </button>
           </div>
         </div>
 
         {history.length > 0 && (
           <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-lg font-medium mb-4">History</h3>
+            <h2 className="text-lg font-medium mb-4">Calculation History</h2>
             <div className="space-y-2">
               {history.map((item, index) => (
                 <motion.div
@@ -133,9 +100,12 @@ const Calculator = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-2 bg-gray-50 rounded-lg"
+                  className="p-3 bg-gray-50 rounded-lg"
                 >
-                  {item}
+                  <p className="text-sm">
+                    <span className="font-medium">{item.product}</span>: {item.km} km requires{' '}
+                    <span className="font-medium">{item.amount} kg</span>
+                  </p>
                 </motion.div>
               ))}
             </div>
