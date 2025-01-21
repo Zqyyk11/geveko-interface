@@ -4,8 +4,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navigation from "./components/Navigation";
+import BottomToolbar from "./components/BottomToolbar";
 import Calculator from "./pages/Calculator";
 import Storage from "./pages/Storage";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -19,8 +21,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Calculator />} />
           <Route path="/storage" element={<Storage />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <BottomToolbar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
