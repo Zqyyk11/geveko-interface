@@ -8,18 +8,19 @@ type Product = {
   id: string;
   name: string;
   coverage: number;
+  density: number; // kg/m²
 };
 
 const products: Product[] = [
-  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3 },
-  { id: 'vialux', name: 'ViaLux®', coverage: 50 },
-  { id: 'viapaint', name: 'ViaPaint®', coverage: 25 },
+  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3, density: 2.5 },
+  { id: 'vialux', name: 'ViaLux®', coverage: 50, density: 3.0 },
+  { id: 'viapaint', name: 'ViaPaint®', coverage: 25, density: 1.8 },
 ];
 
 const Calculator = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [kilometers, setKilometers] = useState<string>('');
-  const [history, setHistory] = useState<Array<{ product: string, km: number, amount: number }>>([]);
+  const [history, setHistory] = useState<Array<{ product: string, km: number, squareMeters: number, amount: number }>>([]);
 
   const calculateAmount = () => {
     const product = products.find(p => p.id === selectedProduct);
@@ -28,12 +29,15 @@ const Calculator = () => {
     const km = parseFloat(kilometers);
     if (isNaN(km)) return;
 
+    // Convert kilometers to meters and calculate width coverage
     const meters = km * 1000;
-    const amountNeeded = meters / product.coverage;
+    const squareMeters = meters * (product.coverage / 1000); // coverage in millimeters to meters
+    const amountNeeded = squareMeters * product.density; // kg = m² * density
 
     setHistory(prev => [...prev, {
       product: product.name,
       km,
+      squareMeters: Math.round(squareMeters * 100) / 100,
       amount: Math.ceil(amountNeeded)
     }]);
   };
@@ -103,8 +107,11 @@ const Calculator = () => {
                   className="p-3 bg-gray-50/50 rounded-lg backdrop-blur-sm"
                 >
                   <p className="text-sm">
-                    <span className="font-medium">{item.product}</span>: {item.km} km requires{' '}
-                    <span className="font-medium">{item.amount} kg</span>
+                    <span className="font-medium">{item.product}</span>: {item.km} km
+                    <br />
+                    Area: <span className="font-medium">{item.squareMeters} m²</span>
+                    <br />
+                    Required: <span className="font-medium">{item.amount} kg</span>
                   </p>
                 </motion.div>
               ))}
