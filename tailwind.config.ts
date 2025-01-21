@@ -21,8 +21,8 @@ export default {
         foreground: "hsl(var(--foreground))",
         soft: {
           gray: "#F1F0FB",
-          purple: "#E5DEFF",
-          pink: "#FFDEE2",
+          orange: "#FEC6A1",
+          white: "#F8F8F8",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",

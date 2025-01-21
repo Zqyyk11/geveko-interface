@@ -7,13 +7,13 @@ import { Label } from "@/components/ui/label";
 type Product = {
   id: string;
   name: string;
-  coverage: number; // Coverage in meters per kg
+  coverage: number;
 };
 
 const products: Product[] = [
-  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3 }, // 3kg per 100m
-  { id: 'vialux', name: 'ViaLux®', coverage: 50 }, // 2kg per 100m
-  { id: 'viapaint', name: 'ViaPaint®', coverage: 25 }, // 4kg per 100m
+  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3 },
+  { id: 'vialux', name: 'ViaLux®', coverage: 50 },
+  { id: 'viapaint', name: 'ViaPaint®', coverage: 25 },
 ];
 
 const Calculator = () => {
@@ -28,7 +28,6 @@ const Calculator = () => {
     const km = parseFloat(kilometers);
     if (isNaN(km)) return;
 
-    // Convert km to meters and calculate required amount in kg
     const meters = km * 1000;
     const amountNeeded = meters / product.coverage;
 
@@ -47,14 +46,14 @@ const Calculator = () => {
       className="min-h-screen pt-20 px-4"
     >
       <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+        <div className="ios-card p-6 space-y-6">
           <h1 className="text-2xl font-semibold text-gray-900 mb-6">Product Calculator</h1>
           
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="product">Select Product</Label>
               <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                <SelectTrigger>
+                <SelectTrigger className="ios-input">
                   <SelectValue placeholder="Choose a product" />
                 </SelectTrigger>
                 <SelectContent>
@@ -77,12 +76,13 @@ const Calculator = () => {
                 value={kilometers}
                 onChange={(e) => setKilometers(e.target.value)}
                 placeholder="Enter distance in kilometers"
+                className="ios-input"
               />
             </div>
 
             <button
               onClick={calculateAmount}
-              className="w-full bg-[#9b87f5] text-white py-2 rounded-lg hover:bg-[#8b77e5] transition-colors"
+              className="ios-button w-full py-3"
               disabled={!selectedProduct || !kilometers}
             >
               Calculate
@@ -91,7 +91,7 @@ const Calculator = () => {
         </div>
 
         {history.length > 0 && (
-          <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
+          <div className="mt-6 ios-card p-6">
             <h2 className="text-lg font-medium mb-4">Calculation History</h2>
             <div className="space-y-2">
               {history.map((item, index) => (
@@ -100,7 +100,7 @@ const Calculator = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-3 bg-gray-50 rounded-lg"
+                  className="p-3 bg-gray-50/50 rounded-lg backdrop-blur-sm"
                 >
                   <p className="text-sm">
                     <span className="font-medium">{item.product}</span>: {item.km} km requires{' '}
