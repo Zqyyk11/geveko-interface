@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Product = {
   id: string;
@@ -59,73 +58,71 @@ const Calculator = () => {
         <div className="ios-card p-6">
           <h1 className="text-2xl font-semibold text-gray-900 mb-6">Product Calculator</h1>
           
-          <ScrollArea className="h-[400px] pr-4">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="product">Select Product</Label>
-                <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                  <SelectTrigger className="ios-input">
-                    <SelectValue placeholder="Choose a product" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((product) => (
-                      <SelectItem key={product.id} value={product.id}>
-                        {product.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  placeholder="Enter weight"
-                  className="ios-input"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="density">Density (kg/m³)</Label>
-                <Input
-                  id="density"
-                  type="number"
-                  value={density}
-                  onChange={(e) => setDensity(e.target.value)}
-                  placeholder="Enter density"
-                  className="ios-input"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="thickness">Thickness (mm)</Label>
-                <Input
-                  id="thickness"
-                  type="number"
-                  value={thickness}
-                  onChange={(e) => setThickness(e.target.value)}
-                  placeholder="Enter thickness"
-                  className="ios-input"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="area">Area (m²)</Label>
-                <Input
-                  id="area"
-                  type="number"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                  placeholder="Enter area"
-                  className="ios-input"
-                />
-              </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="product">Select Product</Label>
+              <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+                <SelectTrigger className="ios-input">
+                  <SelectValue placeholder="Choose a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {products.map((product) => (
+                    <SelectItem key={product.id} value={product.id}>
+                      {product.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </ScrollArea>
+
+            <div className="space-y-2">
+              <Label htmlFor="weight">Weight (kg)</Label>
+              <Input
+                id="weight"
+                type="number"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="Enter weight"
+                className="ios-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="density">Density (kg/m³)</Label>
+              <Input
+                id="density"
+                type="number"
+                value={density}
+                onChange={(e) => setDensity(e.target.value)}
+                placeholder="Enter density"
+                className="ios-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thickness">Thickness (mm)</Label>
+              <Input
+                id="thickness"
+                type="number"
+                value={thickness}
+                onChange={(e) => setThickness(e.target.value)}
+                placeholder="Enter thickness"
+                className="ios-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="area">Area (m²)</Label>
+              <Input
+                id="area"
+                type="number"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                placeholder="Enter area"
+                className="ios-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+          </div>
 
           <Button
             onClick={calculateMissing}
