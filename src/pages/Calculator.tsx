@@ -4,17 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
-type Product = {
-  id: string;
-  name: string;
-};
-
-const products: Product[] = [
-  { id: 'viatherm', name: 'ViaTherm®' },
-  { id: 'vialux', name: 'ViaLux®' },
-  { id: 'viapaint', name: 'ViaPaint®' },
-];
+import { Product } from '@/types/calculator';
+import { products, calculateMissing, canCalculate } from '@/utils/calculatorUtils';
 
 const Calculator = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
@@ -23,28 +14,12 @@ const Calculator = () => {
   const [thickness, setThickness] = useState<string>('');
   const [area, setArea] = useState<string>('');
 
-  const calculateMissing = () => {
-    const w = parseFloat(weight);
-    const d = parseFloat(density);
-    const t = parseFloat(thickness);
-    const a = parseFloat(area);
-
-    // Determine which value is missing and calculate it
-    if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
-      setWeight(((d * a * t) / 1000).toFixed(2));
-    } else if (!isNaN(w) && !isNaN(t) && !isNaN(a)) {
-      setDensity(((w * 1000) / (a * t)).toFixed(2));
-    } else if (!isNaN(w) && !isNaN(d) && !isNaN(a)) {
-      setThickness(((w * 1000) / (d * a)).toFixed(2));
-    } else if (!isNaN(w) && !isNaN(d) && !isNaN(t)) {
-      setArea(((w * 1000) / (d * t)).toFixed(2));
-    }
-  };
-
-  // Check if exactly three inputs are filled
-  const canCalculate = () => {
-    const filledInputs = [weight, density, thickness, area].filter(value => value !== '').length;
-    return filledInputs === 3;
+  const handleCalculate = () => {
+    const result = calculateMissing(weight, density, thickness, area);
+    setWeight(result.weight);
+    setDensity(result.density);
+    setThickness(result.thickness);
+    setArea(result.area);
   };
 
   return (
@@ -125,8 +100,8 @@ const Calculator = () => {
           </div>
 
           <Button
-            onClick={calculateMissing}
-            disabled={!canCalculate()}
+            onClick={handleCalculate}
+            disabled={!canCalculate([weight, density, thickness, area])}
             className="w-full mt-6"
             size="lg"
           >
