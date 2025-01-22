@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 type Product = {
   id: string;
@@ -21,38 +22,29 @@ const Calculator = () => {
   const [density, setDensity] = useState<string>('');
   const [thickness, setThickness] = useState<string>('');
   const [area, setArea] = useState<string>('');
-  const [calculatingField, setCalculatingField] = useState<string>('');
 
-  const calculateMissing = (field: string) => {
+  const calculateMissing = () => {
     const w = parseFloat(weight);
     const d = parseFloat(density);
     const t = parseFloat(thickness);
     const a = parseFloat(area);
 
-    setCalculatingField(field);
-
-    switch (field) {
-      case 'weight':
-        if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
-          setWeight(((d * a * t) / 1000).toFixed(2));
-        }
-        break;
-      case 'density':
-        if (!isNaN(w) && !isNaN(t) && !isNaN(a)) {
-          setDensity(((w * 1000) / (a * t)).toFixed(2));
-        }
-        break;
-      case 'thickness':
-        if (!isNaN(w) && !isNaN(d) && !isNaN(a)) {
-          setThickness(((w * 1000) / (d * a)).toFixed(2));
-        }
-        break;
-      case 'area':
-        if (!isNaN(w) && !isNaN(d) && !isNaN(t)) {
-          setArea(((w * 1000) / (d * t)).toFixed(2));
-        }
-        break;
+    // Determine which value is missing and calculate it
+    if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
+      setWeight(((d * a * t) / 1000).toFixed(2));
+    } else if (!isNaN(w) && !isNaN(t) && !isNaN(a)) {
+      setDensity(((w * 1000) / (a * t)).toFixed(2));
+    } else if (!isNaN(w) && !isNaN(d) && !isNaN(a)) {
+      setThickness(((w * 1000) / (d * a)).toFixed(2));
+    } else if (!isNaN(w) && !isNaN(d) && !isNaN(t)) {
+      setArea(((w * 1000) / (d * t)).toFixed(2));
     }
+  };
+
+  // Check if exactly three inputs are filled
+  const canCalculate = () => {
+    const filledInputs = [weight, density, thickness, area].filter(value => value !== '').length;
+    return filledInputs === 3;
   };
 
   return (
@@ -85,87 +77,60 @@ const Calculator = () => {
 
             <div className="space-y-2">
               <Label htmlFor="weight">Weight (kg)</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="weight"
-                  type="number"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  placeholder="Enter weight"
-                  className="ios-input flex-1"
-                />
-                <button
-                  onClick={() => calculateMissing('weight')}
-                  className="ios-button px-4"
-                  disabled={!density || !thickness || !area}
-                >
-                  Calculate
-                </button>
-              </div>
+              <Input
+                id="weight"
+                type="number"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="Enter weight"
+                className="ios-input"
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="density">Density (kg/m³)</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="density"
-                  type="number"
-                  value={density}
-                  onChange={(e) => setDensity(e.target.value)}
-                  placeholder="Enter density"
-                  className="ios-input flex-1"
-                />
-                <button
-                  onClick={() => calculateMissing('density')}
-                  className="ios-button px-4"
-                  disabled={!weight || !thickness || !area}
-                >
-                  Calculate
-                </button>
-              </div>
+              <Input
+                id="density"
+                type="number"
+                value={density}
+                onChange={(e) => setDensity(e.target.value)}
+                placeholder="Enter density"
+                className="ios-input"
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="thickness">Thickness (mm)</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="thickness"
-                  type="number"
-                  value={thickness}
-                  onChange={(e) => setThickness(e.target.value)}
-                  placeholder="Enter thickness"
-                  className="ios-input flex-1"
-                />
-                <button
-                  onClick={() => calculateMissing('thickness')}
-                  className="ios-button px-4"
-                  disabled={!weight || !density || !area}
-                >
-                  Calculate
-                </button>
-              </div>
+              <Input
+                id="thickness"
+                type="number"
+                value={thickness}
+                onChange={(e) => setThickness(e.target.value)}
+                placeholder="Enter thickness"
+                className="ios-input"
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="area">Area (m²)</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="area"
-                  type="number"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                  placeholder="Enter area"
-                  className="ios-input flex-1"
-                />
-                <button
-                  onClick={() => calculateMissing('area')}
-                  className="ios-button px-4"
-                  disabled={!weight || !density || !thickness}
-                >
-                  Calculate
-                </button>
-              </div>
+              <Input
+                id="area"
+                type="number"
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                placeholder="Enter area"
+                className="ios-input"
+              />
             </div>
+
+            <Button
+              onClick={calculateMissing}
+              disabled={!canCalculate()}
+              className="w-full mt-6"
+              size="lg"
+            >
+              Calculate
+            </Button>
           </div>
         </div>
       </div>
