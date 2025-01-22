@@ -7,39 +7,52 @@ import { Label } from "@/components/ui/label";
 type Product = {
   id: string;
   name: string;
-  coverage: number;
-  density: number; // kg/m²
 };
 
 const products: Product[] = [
-  { id: 'viatherm', name: 'ViaTherm®', coverage: 33.3, density: 2.5 },
-  { id: 'vialux', name: 'ViaLux®', coverage: 50, density: 3.0 },
-  { id: 'viapaint', name: 'ViaPaint®', coverage: 25, density: 1.8 },
+  { id: 'viatherm', name: 'ViaTherm®' },
+  { id: 'vialux', name: 'ViaLux®' },
+  { id: 'viapaint', name: 'ViaPaint®' },
 ];
 
 const Calculator = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [kilometers, setKilometers] = useState<string>('');
-  const [history, setHistory] = useState<Array<{ product: string, km: number, squareMeters: number, amount: number }>>([]);
+  const [weight, setWeight] = useState<string>('');
+  const [density, setDensity] = useState<string>('');
+  const [thickness, setThickness] = useState<string>('');
+  const [area, setArea] = useState<string>('');
+  const [calculatingField, setCalculatingField] = useState<string>('');
 
-  const calculateAmount = () => {
-    const product = products.find(p => p.id === selectedProduct);
-    if (!product || !kilometers) return;
+  const calculateMissing = (field: string) => {
+    const w = parseFloat(weight);
+    const d = parseFloat(density);
+    const t = parseFloat(thickness);
+    const a = parseFloat(area);
 
-    const km = parseFloat(kilometers);
-    if (isNaN(km)) return;
+    setCalculatingField(field);
 
-    // Convert kilometers to meters and calculate width coverage
-    const meters = km * 1000;
-    const squareMeters = meters * (product.coverage / 1000); // coverage in millimeters to meters
-    const amountNeeded = squareMeters * product.density; // kg = m² * density
-
-    setHistory(prev => [...prev, {
-      product: product.name,
-      km,
-      squareMeters: Math.round(squareMeters * 100) / 100,
-      amount: Math.ceil(amountNeeded)
-    }]);
+    switch (field) {
+      case 'weight':
+        if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
+          setWeight(((d * a * t) / 1000).toFixed(2));
+        }
+        break;
+      case 'density':
+        if (!isNaN(w) && !isNaN(t) && !isNaN(a)) {
+          setDensity(((w * 1000) / (a * t)).toFixed(2));
+        }
+        break;
+      case 'thickness':
+        if (!isNaN(w) && !isNaN(d) && !isNaN(a)) {
+          setThickness(((w * 1000) / (d * a)).toFixed(2));
+        }
+        break;
+      case 'area':
+        if (!isNaN(w) && !isNaN(d) && !isNaN(t)) {
+          setArea(((w * 1000) / (d * t)).toFixed(2));
+        }
+        break;
+    }
   };
 
   return (
@@ -71,53 +84,90 @@ const Calculator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="kilometers">Distance (km)</Label>
-              <Input
-                id="kilometers"
-                type="number"
-                min="0"
-                step="0.1"
-                value={kilometers}
-                onChange={(e) => setKilometers(e.target.value)}
-                placeholder="Enter distance in kilometers"
-                className="ios-input"
-              />
+              <Label htmlFor="weight">Weight (kg)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="weight"
+                  type="number"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  placeholder="Enter weight"
+                  className="ios-input flex-1"
+                />
+                <button
+                  onClick={() => calculateMissing('weight')}
+                  className="ios-button px-4"
+                  disabled={!density || !thickness || !area}
+                >
+                  Calculate
+                </button>
+              </div>
             </div>
 
-            <button
-              onClick={calculateAmount}
-              className="ios-button w-full py-3"
-              disabled={!selectedProduct || !kilometers}
-            >
-              Calculate
-            </button>
+            <div className="space-y-2">
+              <Label htmlFor="density">Density (kg/m³)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="density"
+                  type="number"
+                  value={density}
+                  onChange={(e) => setDensity(e.target.value)}
+                  placeholder="Enter density"
+                  className="ios-input flex-1"
+                />
+                <button
+                  onClick={() => calculateMissing('density')}
+                  className="ios-button px-4"
+                  disabled={!weight || !thickness || !area}
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thickness">Thickness (mm)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="thickness"
+                  type="number"
+                  value={thickness}
+                  onChange={(e) => setThickness(e.target.value)}
+                  placeholder="Enter thickness"
+                  className="ios-input flex-1"
+                />
+                <button
+                  onClick={() => calculateMissing('thickness')}
+                  className="ios-button px-4"
+                  disabled={!weight || !density || !area}
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="area">Area (m²)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="area"
+                  type="number"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  placeholder="Enter area"
+                  className="ios-input flex-1"
+                />
+                <button
+                  onClick={() => calculateMissing('area')}
+                  className="ios-button px-4"
+                  disabled={!weight || !density || !thickness}
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
-        {history.length > 0 && (
-          <div className="mt-6 ios-card p-6">
-            <h2 className="text-lg font-medium mb-4">Calculation History</h2>
-            <div className="space-y-2">
-              {history.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="p-3 bg-gray-50/50 rounded-lg backdrop-blur-sm"
-                >
-                  <p className="text-sm">
-                    <span className="font-medium">{item.product}</span>: {item.km} km
-                    <br />
-                    Area: <span className="font-medium">{item.squareMeters} m²</span>
-                    <br />
-                    Required: <span className="font-medium">{item.amount} kg</span>
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </motion.div>
   );
