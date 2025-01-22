@@ -17,7 +17,7 @@ export const calculateMissing = (
 
   if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
     return {
-      weight: ((d * a * t) / 1000).toFixed(2),
+      weight: (d * a * t).toFixed(2),
       density,
       thickness,
       area,
@@ -25,7 +25,7 @@ export const calculateMissing = (
   } else if (!isNaN(w) && !isNaN(t) && !isNaN(a)) {
     return {
       weight,
-      density: ((w * 1000) / (a * t)).toFixed(2),
+      density: (w / (a * t)).toFixed(2),
       thickness,
       area,
     };
@@ -33,7 +33,7 @@ export const calculateMissing = (
     return {
       weight,
       density,
-      thickness: ((w * 1000) / (d * a)).toFixed(2),
+      thickness: (w / (d * a)).toFixed(2),
       area,
     };
   } else if (!isNaN(w) && !isNaN(d) && !isNaN(t)) {
@@ -41,7 +41,7 @@ export const calculateMissing = (
       weight,
       density,
       thickness,
-      area: ((w * 1000) / (d * t)).toFixed(2),
+      area: (w / (d * t)).toFixed(2),
     };
   }
   return { weight, density, thickness, area };
