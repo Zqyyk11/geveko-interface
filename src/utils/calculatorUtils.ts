@@ -2,7 +2,7 @@ export const products = [
   { id: 'viatherm', name: 'ViaTherm®' },
   { id: 'vialux', name: 'ViaLux®' },
   { id: 'viapaint', name: 'ViaPaint®' },
-  { id: 'coldfill', name: 'coldfill®' }
+  { id: 'coldfill', name: 'coldfill®' },
   { id: 'Plastiroute', name: 'Plastiroute®' }
 ];
 
