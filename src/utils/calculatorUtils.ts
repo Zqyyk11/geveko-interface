@@ -3,6 +3,7 @@ export const products = [
   { id: 'vialux', name: 'ViaLux®' },
   { id: 'viapaint', name: 'ViaPaint®' },
   { id: 'coldfill', name: 'coldfill®' }
+  { id: 'Plastiroute', name: 'Plastiroute®' }
 ];
 
 export const calculateMissing = (
