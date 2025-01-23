@@ -1,36 +1,70 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { products, canCalculateFullLine } from '@/utils/calculatorUtils';
+import { products } from "@/utils/calculatorUtils";
 
 const Calculator = () => {
   // Full Line Calculator state
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [density, setDensity] = useState<string>('');
-  const [thickness, setThickness] = useState<string>('');
-  const [area, setArea] = useState<string>('');
-  const [calculatedWeight, setCalculatedWeight] = useState<string>('');
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [weight, setWeight] = useState<string>("");
+  const [density, setDensity] = useState<string>("");
+  const [thickness, setThickness] = useState<string>("");
+  const [area, setArea] = useState<string>("");
 
   // Agglomerate Calculator state
-  const [selectedAggloProduct, setSelectedAggloProduct] = useState<string>('');
-  const [aggloDensity, setAggloDensity] = useState<string>('');
-  const [aggloArea, setAggloArea] = useState<string>('');
-  const [aggloWeight, setAggloWeight] = useState<string>('');
+  const [selectedAggloProduct, setSelectedAggloProduct] = useState<string>("");
+  const [consumption, setConsumption] = useState<string>("");
+  const [aggloArea, setAggloArea] = useState<string>("");
+  const [aggloWeight, setAggloWeight] = useState<string>("");
 
   // Calculate Weight for Full Line
   const handleFullLineCalculate = () => {
-    const weight = parseFloat(density) * parseFloat(thickness) * parseFloat(area);
-    setCalculatedWeight(weight.toFixed(2)); // Round to 2 decimal places
+    const weightNum = parseFloat(weight);
+    const densityNum = parseFloat(density);
+    const thicknessNum = parseFloat(thickness);
+    const areaNum = parseFloat(area);
+
+    // Determine which value to calculate
+    if (!weight && density && thickness && area) {
+      setWeight((densityNum * thicknessNum * areaNum).toFixed(2));
+    } else if (weight && !density && thickness && area) {
+      setDensity((weightNum / (thicknessNum * areaNum)).toFixed(2));
+    } else if (weight && density && !thickness && area) {
+      setThickness((weightNum / (densityNum * areaNum)).toFixed(2));
+    } else if (weight && density && thickness && !area) {
+      setArea((weightNum / (densityNum * thicknessNum)).toFixed(2));
+    }
+  };
+
+  // Clear inputs for Full Line Calculator
+  const handleClearInputs = () => {
+    setWeight("");
+    setDensity("");
+    setThickness("");
+    setArea("");
+    setSelectedProduct("");
   };
 
   // Calculate Weight for Agglomerate
   const handleAgglomerateCalculate = () => {
-    const result = parseFloat(aggloDensity) * parseFloat(aggloArea);
-    setAggloWeight(result.toFixed(2));
+    const consumptionNum = parseFloat(consumption);
+    const aggloAreaNum = parseFloat(aggloArea);
+
+    if (consumptionNum && aggloAreaNum) {
+      setAggloWeight((consumptionNum * aggloAreaNum).toFixed(2));
+    }
+  };
+
+  // Clear inputs for Agglomerate Calculator
+  const handleAggloClearInputs = () => {
+    setConsumption("");
+    setAggloArea("");
+    setAggloWeight("");
+    setSelectedAggloProduct("");
   };
 
   return (
@@ -49,9 +83,17 @@ const Calculator = () => {
 
           {/* Full Line Calculator */}
           <TabsContent value="fullLine">
-            <div className="ios-card p-6">
+            <div className="ios-card p-6 relative">
               <h1 className="text-2xl font-semibold text-gray-900 mb-6">Full Line Calculator</h1>
-              
+
+              {/* Clear Button */}
+              <Button
+                onClick={handleClearInputs}
+                className="absolute top-4 right-4 bg-red-500 text-white hover:bg-red-600"
+              >
+                Clear
+              </Button>
+
               <div className="space-y-4">
                 {/* Product Selector */}
                 <div className="space-y-2">
@@ -70,7 +112,20 @@ const Calculator = () => {
                   </Select>
                 </div>
 
-                {/* Density Input */}
+                {/* Inputs */}
+                <div className="space-y-2">
+                  <Label htmlFor="weight">Weight (kg)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    min="0"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    placeholder="Enter weight or leave blank to calculate"
+                    className="ios-input"
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="density">Density (kg/m³)</Label>
                   <Input
@@ -79,12 +134,11 @@ const Calculator = () => {
                     min="0"
                     value={density}
                     onChange={(e) => setDensity(e.target.value)}
-                    placeholder="Enter density"
+                    placeholder="Enter density or leave blank to calculate"
                     className="ios-input"
                   />
                 </div>
 
-                {/* Thickness Input */}
                 <div className="space-y-2">
                   <Label htmlFor="thickness">Thickness (mm)</Label>
                   <Input
@@ -93,12 +147,11 @@ const Calculator = () => {
                     min="0"
                     value={thickness}
                     onChange={(e) => setThickness(e.target.value)}
-                    placeholder="Enter thickness"
+                    placeholder="Enter thickness or leave blank to calculate"
                     className="ios-input"
                   />
                 </div>
 
-                {/* Area Input */}
                 <div className="space-y-2">
                   <Label htmlFor="area">Area (m²)</Label>
                   <Input
@@ -107,27 +160,22 @@ const Calculator = () => {
                     min="0"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
-                    placeholder="Enter area"
+                    placeholder="Enter area or leave blank to calculate"
                     className="ios-input"
-                  />
-                </div>
-
-                {/* Calculated Weight Output */}
-                <div className="space-y-2">
-                  <Label htmlFor="calculatedWeight">Calculated Weight (kg)</Label>
-                  <Input
-                    id="calculatedWeight"
-                    type="text"
-                    readOnly
-                    value={calculatedWeight}
-                    className="ios-input bg-gray-50"
                   />
                 </div>
               </div>
 
               <Button
                 onClick={handleFullLineCalculate}
-                disabled={!canCalculateFullLine([density, thickness, area])}
+                disabled={
+                  !(
+                    (weight && density && thickness) ||
+                    (weight && density && area) ||
+                    (weight && thickness && area) ||
+                    (density && thickness && area)
+                  )
+                }
                 className="w-full mt-6"
                 size="lg"
               >
@@ -138,9 +186,17 @@ const Calculator = () => {
 
           {/* Agglomerate Calculator */}
           <TabsContent value="agglomerate">
-            <div className="ios-card p-6">
+            <div className="ios-card p-6 relative">
               <h1 className="text-2xl font-semibold text-gray-900 mb-6">Agglomerate Calculator</h1>
-              
+
+              {/* Clear Button */}
+              <Button
+                onClick={handleAggloClearInputs}
+                className="absolute top-4 right-4 bg-red-500 text-white hover:bg-red-600"
+              >
+                Clear
+              </Button>
+
               <div className="space-y-4">
                 {/* Product Selector */}
                 <div className="space-y-2">
@@ -159,15 +215,16 @@ const Calculator = () => {
                   </Select>
                 </div>
 
+                {/* Inputs */}
                 <div className="space-y-2">
-                  <Label htmlFor="aggloDensity">Density (kg/m³)</Label>
+                  <Label htmlFor="consumption">Consumption (kg/m²)</Label>
                   <Input
-                    id="aggloDensity"
+                    id="consumption"
                     type="number"
                     min="0"
-                    value={aggloDensity}
-                    onChange={(e) => setAggloDensity(e.target.value)}
-                    placeholder="Enter density"
+                    value={consumption}
+                    onChange={(e) => setConsumption(e.target.value)}
+                    placeholder="Enter consumption"
                     className="ios-input"
                   />
                 </div>
@@ -199,7 +256,7 @@ const Calculator = () => {
 
               <Button
                 onClick={handleAgglomerateCalculate}
-                disabled={!aggloDensity || !aggloArea}
+                disabled={!consumption || !aggloArea}
                 className="w-full mt-6"
                 size="lg"
               >
