@@ -16,9 +16,15 @@ const Navigation = () => {
             transition={{ duration: 0.5 }}
             className="flex items-center space-x-8"
           >
-            <Link to="/" className="text-lg font-medium text-gray-900">
-              Geveko Markings
+            {/* Replace the text "Geveko Markings" with an image */}
+            <Link to="/" className="flex items-center">
+              <img
+                src="/geveko-markings-logo.png" 
+                alt="Geveko Markings Logo"
+                className="h-8 w-auto" // Adjust the height and width as necessary
+              />
             </Link>
+
             <div className="hidden md:flex space-x-4">
               <Link
                 to="/"
