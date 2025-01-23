@@ -24,7 +24,7 @@ const Navigation = () => {
                 to="/"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/') 
-                    ? 'bg-[#9b87f5] text-white' 
+                    ? 'bg-[#FF6100] text-white' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -34,7 +34,7 @@ const Navigation = () => {
                 to="/storage"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/storage') 
-                    ? 'bg-[#9b87f5] text-white' 
+                    ? 'bg-[#FF6100] text-white' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >

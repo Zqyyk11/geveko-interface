@@ -19,7 +19,7 @@ const Calculator = () => {
   // Agglomerate Calculator state
   const [aggloDensity, setAggloDensity] = useState<string>('');
   const [aggloArea, setAggloArea] = useState<string>('');
-  const [kgNeeded, setKgNeeded] = useState<string>('');
+  const [aggloWeight, setAggloWeight] = useState<string>('');
 
   const handleFullLineCalculate = () => {
     const result = calculateFullLine(weight, density, thickness, area);
@@ -31,7 +31,7 @@ const Calculator = () => {
 
   const handleAgglomerateCalculate = () => {
     const result = calculateAgglomerate(aggloDensity, aggloArea);
-    setKgNeeded(result);
+    setAggloWeight(result);
   };
 
   return (
@@ -165,11 +165,11 @@ const Calculator = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="kgNeeded">KG Needed</Label>
+                  <Label htmlFor="kgNeeded">Weight (kg)</Label>
                   <Input
-                    id="kgNeeded"
+                    id="aggloWeight"
                     type="number"
-                    value={kgNeeded}
+                    value={aggloWeight}
                     readOnly
                     className="ios-input bg-gray-50"
                   />
@@ -182,7 +182,7 @@ const Calculator = () => {
                 className="w-full mt-6"
                 size="lg"
               >
-                Calculate KG Needed
+                Calculate
               </Button>
             </div>
           </TabsContent>
