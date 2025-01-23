@@ -6,16 +6,16 @@ export const products = [
   { id: 'Plastiroute', name: 'Plastiroute®' }
 ];
 
-export const calculateMissing = (
+export const calculateFullLine = (
   weight: string,
   density: string,
   thickness: string,
   area: string
 ) => {
-  const w = parseFloat(weight);
-  const d = parseFloat(density);
-  const t = parseFloat(thickness);
-  const a = parseFloat(area);
+  const w = Math.max(0, parseFloat(weight));
+  const d = Math.max(0, parseFloat(density));
+  const t = Math.max(0, parseFloat(thickness));
+  const a = Math.max(0, parseFloat(area));
 
   if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
     return {
@@ -49,6 +49,20 @@ export const calculateMissing = (
   return { weight, density, thickness, area };
 };
 
-export const canCalculate = (inputs: string[]) => {
+export const calculateAgglomerate = (density: string, area: string) => {
+  const d = Math.max(0, parseFloat(density));
+  const a = Math.max(0, parseFloat(area));
+
+  if (!isNaN(d) && !isNaN(a)) {
+    return (d * a).toFixed(2);
+  }
+  return '';
+};
+
+export const canCalculateFullLine = (inputs: string[]) => {
   return inputs.filter(value => value !== '').length === 3;
+};
+
+export const canCalculateAgglomerate = (density: string, area: string) => {
+  return density !== '' && area !== '';
 };

@@ -3,9 +3,15 @@ export type Product = {
   name: string;
 };
 
-export type CalculatorInputs = {
+export type FullLineInputs = {
   weight: string;
   density: string;
   thickness: string;
   area: string;
+};
+
+export type AgglomerateInputs = {
+  density: string;
+  area: string;
+  kg: string;
 };
