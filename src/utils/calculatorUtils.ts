@@ -1,10 +1,13 @@
 export const products = [
-  { id: 'viatherm', name: 'ViaTherm®' },
-  { id: 'vialux', name: 'ViaLux®' },
-  { id: 'viapaint', name: 'ViaPaint®' },
-  { id: 'coldfill', name: 'Coldfill®' },
-  { id: 'plastiroute', name: 'Plastiroute®' }
-];
+  { id: 'plastiroutecsp', name: 'PlastiRoute® CSP' },
+  { id: 'plastirouterp', name: 'PlastiRoute® RP' },
+  { id: 'plastiroutefp', name: 'PlastiRoute® FP' },
+  { id: 'plastiroutespotline', name: 'PlastiRoute® SpotLine' },
+  { id: 'plastirouterollplast', name: 'PlastiRoute® RollPlast' },
+  { id: 'plastirouterollgrip', name: 'PlastiRoute® RollGrip' },
+  { id: 'plastiroutesprayplast', name: 'PlastiRoute® SprayPlast'},
+  { id: 'plastiroutespraygrip', name: 'PlastiRoute® SprayGrip' }
+]; 
 
 export const calculateFullLine = (
   weight: string,
