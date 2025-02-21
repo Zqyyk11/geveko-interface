@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -74,7 +75,37 @@ const Calculator = () => {
       transition={{ duration: 0.5 }}
       className="min-h-screen pt-20 px-4"
     >
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto space-y-6">
+        {/* Product Guide */}
+        <div className="ios-card p-6 bg-white rounded-lg shadow">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Product Guide</h2>
+          <div className="space-y-4">
+            <div className="border-b pb-4">
+              <h3 className="font-semibold text-lg mb-2">Cold Plastics</h3>
+              <div className="space-y-2">
+                <p className="text-sm"><span className="font-medium">PlastiRoute® CSP:</span> Cold spray plastic for road marking with excellent durability.</p>
+                <p className="text-sm"><span className="font-medium">PlastiRoute® RP:</span> Reactive plastic system for manual application with rollers.</p>
+                <p className="text-sm"><span className="font-medium">PlastiRoute® FP:</span> Flow-able cold plastic system for automated machine application.</p>
+              </div>
+            </div>
+            <div className="border-b pb-4">
+              <h3 className="font-semibold text-lg mb-2">Specialty Products</h3>
+              <div className="space-y-2">
+                <p className="text-sm"><span className="font-medium">PlastiRoute® SpotLine:</span> Specialized for spot marking and symbol applications.</p>
+                <p className="text-sm"><span className="font-medium">PlastiRoute® RollPlast:</span> Cold plastic for manual application with excellent skid resistance.</p>
+                <p className="text-sm"><span className="font-medium">PlastiRoute® RollGrip:</span> Anti-skid surface treatment for critical areas.</p>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg mb-2">Spray Applications</h3>
+              <div className="space-y-2">
+                <p className="text-sm"><span className="font-medium">PlastiRoute® SprayPlast:</span> Sprayable cold plastic for large-scale road marking.</p>
+                <p className="text-sm"><span className="font-medium">PlastiRoute® SprayGrip:</span> Spray-applied anti-skid treatment for various surfaces.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Tabs defaultValue="fullLine" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="fullLine">Full Line Calculator</TabsTrigger>
