@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -16,12 +17,11 @@ const Navigation = () => {
             transition={{ duration: 0.5 }}
             className="flex items-center space-x-8"
           >
-            {/* Replace the text "Geveko Markings" with an image */}
             <Link to="/" className="flex items-center">
               <img
                 src="/geveko-markings-logo.png" 
                 alt="Geveko Markings Logo"
-                className="h-8 w-auto" // Adjust the height and width as necessary
+                className="h-8 w-auto"
               />
             </Link>
 
@@ -35,6 +35,16 @@ const Navigation = () => {
                 }`}
               >
                 Product Calculator
+              </Link>
+              <Link
+                to="/guide"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/guide') 
+                    ? 'bg-[#FF6100] text-white' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                Product Guide
               </Link>
               <Link
                 to="/storage"
